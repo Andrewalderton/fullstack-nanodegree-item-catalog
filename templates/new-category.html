@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="featured-section">Add Category</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label for="title">Name</label>
+                <input type="text" class="form-control" name="name" value="{{name}}" placeholder="">
+                <div class="error">{{error}}</div>
+            </div>
+            <div class="form-group">
+                <label for="body">Description</label>
+                <textarea rows="15" cols="50" class="form-control" name="body" value="{{description}}" placeholder="Enter your text here."></textarea>
+                <div class="error">{{error}}</div>
+            </div>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

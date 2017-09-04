@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+            {% for book in books %}
+                <div class="error">{{error}}</div>
+                <h2 class="featured-section">{{book.title}}</h2>
+                <br>
+                <h2><em>By {{ book.author }}</em></h2>
+                <div class="post-content description">
+                    <p>{{book.description}}</p>
+                </div>
+                {% if 'username' in session %}
+                <div class="edit-butons">
+                    <br>
+                    <a href="{{url_for('editBook', category_id=book.category_id,book_id=book.id)}}" class="btn">Edit Book</a>
+                    <a href="{{url_for('deleteBook', category_id=book.category_id, book_id=book.id)}}" class="btn">Delete Book</a>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+        </div>
+{% endblock %}

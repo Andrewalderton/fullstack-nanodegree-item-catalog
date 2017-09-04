@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="featured-section">Edit Book</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" name="title" value="{{title}}">
+            </div>
+            <div class="form-group">
+                <label for="title">Author</label>
+                <input type="text" class="form-control" name="author" value="{{author}}">
+            </div>
+            <div class="form-group">
+                <label for="body">Description</label>
+                <textarea rows="15" cols="50" class="form-control" name="description" value="{{description}}">{{description}}</textarea>
+            </div>
+            <div class="error">{{error}}</div>
+            <button class="btn btn-primary" type="submit">Update</button>
+            <a href="/categories/{{category_id}}/books" class="btn btn-danger">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

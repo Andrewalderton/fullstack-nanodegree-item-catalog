@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+            {% if 'username' in session %}
+                <a href="{{url_for('newCategory')}}" class="btn">Add Category</a>
+            {% endif %}
+            {% for category in categories %}
+                <div class="error">{{error}}</div>
+                <a href="{{url_for('showBook', category_id=category.id)}}"><h2 class="featured-section">{{category.name}}</h2></a>
+                <br>
+                {% if 'username' in session %}
+                <div class="edit-butons">
+                    <br>
+                    <a href="{{url_for('editCategory', category_id=category.id)}}" class="btn">Edit Category</a>
+                    <a href="{{url_for('deleteCategory', category_id=category.id)}}" class="btn">Delete Category</a>
+                    <a href="{{ url_for('newBook', category_id=category.id) }}" class="btn">Add Book</a>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+        </div>
+        <div class="error">{{error}}</div>
+    </div>
+{% endblock %}
