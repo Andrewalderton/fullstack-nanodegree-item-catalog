@@ -15,6 +15,24 @@ class User(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String, nullable=False)
     email = Column(String)
+    picture = Column(String)
+
+
+class Category(Base):
+    __tablename__ = 'categories'
+
+    id = Column(Integer, primary_key=True, nullable=False)
+    name = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship(User)
+
+    @property
+    def serialize(self):
+	    # return category data in serializable format
+        return {
+            'id': self.id,
+            'name': self.name
+    	}
 
 
 class Book(Base):
@@ -25,6 +43,8 @@ class Book(Base):
     author = Column(String, nullable=False)
     description = Column(String, nullable=False)
     img = Column(String)
+    category_id = Column(String, ForeignKey('categories.id'), nullable=False)
+    category = relationship(Category)
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship(User)
 
@@ -36,10 +56,13 @@ class Book(Base):
             'title': self.title,
             'author': self.author,
             'description': self.description,
-            'img': self.img,
+            'category': self.category.name,
+            'img': self.img
         }
 
 
 engine = create_engine('sqlite:///itemcatalog.db')
 
 Base.metadata.create_all(engine)
+
+print('db configured')
