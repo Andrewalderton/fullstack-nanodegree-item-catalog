@@ -21,15 +21,15 @@ user_admin = User(name='Andy', email='udacity@bestbooks.com', picture='')
 session.add(user_admin)
 session.commit()
 
-category1 = Category(name='Science-Fiction', user_id=1)
+category1 = Category(name='Science-Fiction', description='Post your favourite science-fiction books here.', user_id=1)
 session.add(category1)
 session.commit()
 
-category2 = Category(name='Thriller', user_id=1)
+category2 = Category(name='Thriller', description='What makes a good thriller?', user_id=1)
 session.add(category2)
 session.commit()
 
-category3 = Category(name='Health and Fitness', user_id=1)
+category3 = Category(name='Health and Fitness', description='Get ripped now.', user_id=1)
 session.add(category3)
 session.commit()
 
@@ -41,6 +41,7 @@ book1 = Book(
      Arrakis is the sole source of Melange, necessary for interstellar
      travel and also grants psychic powers and longevity, so whoever
      controls it wields great influence.""",
+    category_id=1,
     img='',
     user_id=1
 )

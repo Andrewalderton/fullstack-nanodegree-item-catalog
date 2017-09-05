@@ -6,16 +6,17 @@
         <h2 class="featured-section">Add Category</h2>
         <form method="POST">
             <div class="form-group">
-                <label for="title">Name</label>
+                <label for="name">Name</label>
                 <input type="text" class="form-control" name="name" value="{{name}}" placeholder="">
                 <div class="error">{{error}}</div>
             </div>
             <div class="form-group">
-                <label for="body">Description</label>
-                <textarea rows="15" cols="50" class="form-control" name="body" value="{{description}}" placeholder="Enter your text here."></textarea>
+                <label for="description">Description</label>
+                <textarea rows="9" cols="50" class="form-control" name="description" value="{{description}}" placeholder="Enter your text here."></textarea>
                 <div class="error">{{error}}</div>
             </div>
             <button class="btn btn-primary" type="submit">Submit</button>
+            <a href="/" class="btn btn-danger">Cancel</a>
         </form>
     </div>
 </div>

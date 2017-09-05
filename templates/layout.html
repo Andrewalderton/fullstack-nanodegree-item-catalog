@@ -36,6 +36,7 @@
                     <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         {% if 'username' in session %}
+                        <li><a href="{{url_for('newCategory')}}">Add Category</a></li>
                         <li><a href="{{url_for('logout')}}">Logout</a></li>
                         {% else %}
                         <li><a href="{{url_for('showLogin')}}">Login</a></li>

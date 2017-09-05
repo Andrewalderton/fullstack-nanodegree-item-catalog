@@ -4,8 +4,15 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
+            {% if not books %}
+                <p>Sorry, there are no books in this catergory yet.</p>
+                {% if 'username' in session %}
+                <div class="edit-butons">
+                    <a href="{{ url_for('newBook', category_id=category.id) }}" class="btn-group">Add Book</a>
+                </div>
+                {% endif %}
+            {% endif %}
             {% for book in books %}
-                <div class="error">{{error}}</div>
                 <h2 class="featured-section">{{book.title}}</h2>
                 <br>
                 <h2><em>By {{ book.author }}</em></h2>
@@ -15,9 +22,10 @@
                 {% if 'username' in session %}
                 <div class="edit-butons">
                     <br>
-                    <a href="{{url_for('editBook', category_id=book.category_id,book_id=book.id)}}" class="btn">Edit Book</a>
-                    <a href="{{url_for('deleteBook', category_id=book.category_id, book_id=book.id)}}" class="btn">Delete Book</a>
+                    <a href="{{url_for('editBook', category_id=book.category_id,book_id=book.id)}}" class="btn-group">Edit Book</a>
+                    <a href="{{url_for('deleteBook', category_id=book.category_id, book_id=book.id)}}" class="btn-group">Delete Book</a>
                 </div>
+                <hr>
                 {% endif %}
             {% endfor %}
             </div>

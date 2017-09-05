@@ -194,7 +194,9 @@ def newCategory():
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        new_category = Category(name=request.form['name'])
+        new_category = Category(name=request.form['name'],
+                                description=request.form['description'],
+                                user_id=login_session['user_id'])
         session.add(new_category)
         flash('New category %s Successfully Created' % new_category.name)
         session.commit()
@@ -213,10 +215,14 @@ def editCategory(category_id):
     if request.method == 'POST':
         if request.form['name']:
             edited_category.name = request.form['name']
+            edited_category.description = request.form['description']
+            session.add(edited_category)
+            session.commit()
             flash('category Successfully Edited %s' % edited_category.name)
             return redirect(url_for('showCategories'))
     else:
-        return render_template('edit-category.html', category=edited_category)
+        return render_template('edit-category.html',
+                               name=edited_category.name, description=edited_category.description)
 
 
 # Delete a category
@@ -250,11 +256,24 @@ def showBook(category_id):
 def newBook(category_id):
     if 'username' not in login_session:
         return redirect('/login')
-    category = session.query(Category).filter_by(id=category_id).one()
+
     if request.method == 'POST':
-        new_book = Book(title=request.form['title'],
-                        author=request.form['author'],
-                        description=request.form['description'],
+        title = request.form['title']
+        author = request.form['author']
+        description = request.form['description']
+
+        if not request.form['title']:
+            error_title = 'Please enter a title'
+            return render_template('new-book.html', category_id=category_id, error_title=error_title, title=title, author=author, description=description)
+
+        if not request.form['author']:
+            error_author = 'Please enter an author'
+            return render_template('new-book.html', category_id=category_id, error_author=error_author, title=title, author=author, description=description)
+
+        category = session.query(Category).filter_by(id=category_id).one()
+        new_book = Book(title=str(title),
+                        author=str(author),
+                        description=str(description),
                         category_id=category_id,
                         user_id=login_session['user_id'],
                         img='')

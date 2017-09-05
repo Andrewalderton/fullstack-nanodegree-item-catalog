@@ -23,6 +23,7 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String, nullable=False)
+    description = Column(String)
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship(User)
 
@@ -31,7 +32,8 @@ class Category(Base):
 	    # return category data in serializable format
         return {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'description': self.description
     	}
 
 
@@ -41,7 +43,7 @@ class Book(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     title = Column(String, nullable=False)
     author = Column(String, nullable=False)
-    description = Column(String, nullable=False)
+    description = Column(String)
     img = Column(String)
     category_id = Column(String, ForeignKey('categories.id'), nullable=False)
     category = relationship(Category)
