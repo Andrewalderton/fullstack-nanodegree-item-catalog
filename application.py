@@ -185,7 +185,9 @@ def gdisconnect():
 @app.route('/categories/')
 def showCategories():
     categories = session.query(Category).order_by(asc(Category.name))
-    return render_template('categories.html', categories=categories)
+    return render_template('categories.html',
+                           categories=categories,
+                           user_id=login_session['user_id'])
 
 
 # Create a new category
@@ -193,7 +195,17 @@ def showCategories():
 def newCategory():
     if 'username' not in login_session:
         return redirect('/login')
+
     if request.method == 'POST':
+        if not request.form['name']:
+            name = request.form['name']
+            description = request.form['description']
+            error = 'Please enter a category name'
+            return render_template('new-category.html',
+                                   error=error,
+                                   name=name,
+                                   description=description)
+
         new_category = Category(name=request.form['name'],
                                 description=request.form['description'],
                                 user_id=login_session['user_id'])
@@ -210,16 +222,29 @@ def newCategory():
 def editCategory(category_id):
     if 'username' not in login_session:
         return redirect('/login')
-    edited_category = session.query(
-        Category).filter_by(id=category_id).one()
+
+    edited_category = session.query(Category).filter_by(id=category_id).one()
+
     if request.method == 'POST':
-        if request.form['name']:
+        if login_session['user_id'] != edited_category.user_id:
+            error = 'Sorry, you do not have permission to edit this category.'
+            return render_template('edit-category.html',
+                                   name=edited_category.name,
+                                   description=edited_category.description,
+                                   error=error)
+        elif request.form['name']:
             edited_category.name = request.form['name']
             edited_category.description = request.form['description']
             session.add(edited_category)
             session.commit()
             flash('category Successfully Edited %s' % edited_category.name)
             return redirect(url_for('showCategories'))
+        else:
+            error = 'Category name is required.'
+            return render_template('edit-category.html',
+                                   name=edited_category.name,
+                                   description=edited_category.description,
+                                   error=error)
     else:
         return render_template('edit-category.html',
                                name=edited_category.name, description=edited_category.description)
@@ -230,15 +255,22 @@ def editCategory(category_id):
 def deleteCategory(category_id):
     if 'username' not in login_session:
         return redirect('/login')
-    categoryToDelete = session.query(
+    category_to_delete = session.query(
         Category).filter_by(id=category_id).one()
     if request.method == 'POST':
-        session.delete(categoryToDelete)
-        flash('%s Successfully Deleted' % categoryToDelete.name)
-        session.commit()
-        return redirect(url_for('showCategories', category_id=category_id))
+        if login_session['user_id'] != category_to_delete.user_id:
+            error = 'Sorry, you do not have permission to delete this category.'
+            return render_template('delete-category.html',
+                                   category_id=category_id,
+                                   error=error)
+        else:
+            session.delete(category_to_delete)
+            flash('%s Successfully Deleted' % category_to_delete.name)
+            session.commit()
+            return redirect(url_for('showCategories'))
     else:
-        return render_template('delete-category.html', category=categoryToDelete)
+        return render_template('delete-category.html',
+                               category=category_id)
 
 
 # Show a category's books
@@ -246,9 +278,21 @@ def deleteCategory(category_id):
 @app.route('/categories/<int:category_id>/books/')
 def showBook(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
-    books = session.query(Book).filter_by(
-        category_id=category_id).all()
-    return render_template('book.html', books=books, category=category)
+    books = session.query(Book).filter_by(category_id=category_id).all()
+    return render_template('books.html',
+                           books=books,
+                           category=category,
+                           user_id=login_session['user_id'])
+
+
+# Show a single book
+@app.route('/categories/<int:category_id>/<int:book_id>/')
+@app.route('/categories/<int:category_id>/books/<int:book_id>/')
+def singleBook(category_id, book_id):
+    book = session.query(Book).filter_by(id=book_id).one()
+    return render_template('book-item.html',
+                           user_id=login_session['user_id'],
+                           book=book)
 
 
 # Create a new book item
@@ -264,13 +308,22 @@ def newBook(category_id):
 
         if not request.form['title']:
             error_title = 'Please enter a title'
-            return render_template('new-book.html', category_id=category_id, error_title=error_title, title=title, author=author, description=description)
+            return render_template('new-book.html',
+                                   category_id=category_id,
+                                   error_title=error_title,
+                                   title=title,
+                                   author=author,
+                                   description=description)
 
         if not request.form['author']:
             error_author = 'Please enter an author'
-            return render_template('new-book.html', category_id=category_id, error_author=error_author, title=title, author=author, description=description)
+            return render_template('new-book.html',
+                                   category_id=category_id,
+                                   error_author=error_author,
+                                   title=title,
+                                   author=author,
+                                   description=description)
 
-        category = session.query(Category).filter_by(id=category_id).one()
         new_book = Book(title=str(title),
                         author=str(author),
                         description=str(description),
@@ -290,15 +343,46 @@ def newBook(category_id):
 def editBook(category_id, book_id):
     if 'username' not in login_session:
         return redirect('/login')
+
     edited_book = session.query(Book).filter_by(id=book_id).one()
     category = session.query(Category).filter_by(id=category_id).one()
+
+    if login_session['user_id'] != edited_book.user_id:
+        error = 'Sorry, you can\'t edit other users\' posts.'
+        return render_template('book-item.html',
+                               error=error,
+                               title=edited_book.title,
+                               author=edited_book.author,
+                               description=edited_book.description,
+                               category_id=category_id,
+                               book_id=book_id)
+
     if request.method == 'POST':
-        if request.form['title']:
+        if not request.form['title']:
+            error_title = 'Please enter a title'
+            return render_template('edit-book.html',
+                                   title=edited_book.title,
+                                   author=edited_book.author,
+                                   description=edited_book.description,
+                                   category_id=category.id,
+                                   error_title=error_title)
+        else:
             edited_book.title = request.form['title']
+
+        if not request.form['author']:
+            error_author = 'Please enter an author'
+            return render_template('edit-book.html',
+                                   title=edited_book.title,
+                                   author=edited_book.author,
+                                   description=edited_book.description,
+                                   category_id=category.id,
+                                   error_author=error_author)
+        else:
+            edited_book.author = request.form['author']
+
         if request.form['description']:
             edited_book.description = request.form['description']
-        if request.form['author']:
-            edited_book.author = request.form['author']
+
         session.add(edited_book)
         session.commit()
         flash('Book Successfully Edited')
@@ -316,15 +400,19 @@ def editBook(category_id, book_id):
 def deleteBook(category_id, book_id):
     if 'username' not in login_session:
         return redirect('/login')
+
     category = session.query(Category).filter_by(id=category_id).one()
-    bookToDelete = session.query(Book).filter_by(id=book_id).one()
+    book_to_delete = session.query(Book).filter_by(id=book_id).one()
+
     if request.method == 'POST':
-        session.delete(bookToDelete)
+        session.delete(book_to_delete)
         session.commit()
         flash('Book Successfully Deleted')
         return redirect(url_for('showBook', category_id=category_id))
     else:
-        return render_template('delete-book.html', category_id=category.id, book_id=bookToDelete.id)
+        return render_template('delete-book.html',
+                               category_id=category.id,
+                               book_id=book_to_delete.id)
 
 
 # JSON APIs to view category Information
@@ -333,12 +421,13 @@ def categoriesJSON():
     categories = session.query(Category).all()
     return jsonify(Categories=[r.serialize for r in categories])
 
+
 @app.route('/categories/<int:category_id>/JSON')
 def categoryJSON(category_id):
-    category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Book).filter_by(
         category_id=category_id).all()
     return jsonify(Books=[i.serialize for i in items])
+
 
 @app.route('/categories/<int:category_id>/books/<int:book_id>/JSON')
 def bookJSON(category_id, book_id):

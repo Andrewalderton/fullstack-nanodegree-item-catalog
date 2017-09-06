@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="featured-section">{{category.name}}</h1>
+                <br>
+                {% if not books %}
+                    <p>Sorry, there are no books in this category yet.</p>
+                    {% if 'username' in session %}
+                    <div>
+                        <a href="{{ url_for('newBook', category_id=category.id) }}" class="btn-group">Add Book</a>
+                    </div>
+                    {% endif %}
+                {% endif %}
+                {% for book in books %}
+                    <a href="{{url_for('singleBook', category_id=book.category_id, book_id=book.id)}}"><h2 class="featured-section">{{book.title}}</h2></a>
+                    <br>
+                    <h2><em>By {{ book.author }}</em></h2>
+                    <div class="post-content description">
+                        <p>{{book.description}}</p>
+                    </div>
+                    {% if user_id == book.user_id %}
+                    <div>
+                        <br>
+                        <a href="{{url_for('editBook', category_id=book.category_id, book_id=book.id)}}" class="btn-group">Edit Book</a>
+                        <a href="{{url_for('deleteBook', category_id=book.category_id, book_id=book.id)}}" class="btn-group">Delete Book</a>
+                    </div>
+                    <hr>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+{% endblock %}

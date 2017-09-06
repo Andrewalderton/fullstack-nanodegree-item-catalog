@@ -8,18 +8,20 @@
             <div class="form-group">
                 <label for="title">Title</label>
                 <input type="text" class="form-control" name="title" value="{{title}}">
+                <div class="error">{{error_title}}</div>
             </div>
             <div class="form-group">
-                <label for="title">Author</label>
+                <label for="author">Author</label>
                 <input type="text" class="form-control" name="author" value="{{author}}">
+                <div class="error">{{error_author}}</div>
             </div>
             <div class="form-group">
-                <label for="body">Description</label>
+                <label for="description">Description</label>
                 <textarea rows="9" cols="50" class="form-control" name="description" value="{{description}}">{{description}}</textarea>
             </div>
-            <div class="error">{{error}}</div>
+            <br>
             <button class="btn btn-primary" type="submit">Update</button>
-            <a href="/categories/{{category_id}}/books" class="btn btn-danger">Cancel</a>
+            <a href="/categories/{{category_id}}/{{book_id}}" class="btn btn-danger">Cancel</a>
         </form>
     </div>
 </div>

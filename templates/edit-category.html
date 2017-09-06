@@ -8,12 +8,13 @@
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" class="form-control" name="name" value="{{name}}">
+                <div class="error">{{error}}</div>
             </div>
             <div class="form-group">
                 <label for="description">Description</label>
                 <textarea rows="9" cols="50" class="form-control" name="description" value="{{description}}">{{description}}</textarea>
             </div>
-            <div class="error">{{error}}</div>
+            <br>
             <button class="btn btn-primary" type="submit">Update</button>
             <a href="/categories/{{category_id}}" class="btn btn-danger">Cancel</a>
         </form>
