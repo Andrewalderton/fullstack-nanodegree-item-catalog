@@ -8,7 +8,7 @@
                 <a href="{{url_for('showBook', category_id=category.id)}}"><h2 class="featured-section featured-heading">{{category.name}}</h2></a>
                 <p>{{category.description}}</p>
                 <br>
-                {% if user_id == category.user_id %}
+                {% if 'username' in session and category.user_id == session['user_id'] %}
                 <div>
                     <br>
                     <a href="{{url_for('editCategory', category_id=category.id)}}" class="btn-group">Edit Category</a>
@@ -16,7 +16,7 @@
                     <a href="{{ url_for('newBook', category_id=category.id) }}" class="btn-group">Add Book</a>
                 </div>
                 <hr>
-                {% else %}
+                {% elif 'username' in session %}
                 <a href="{{ url_for('newBook', category_id=category.id) }}" class="btn-group">Add Book</a>
                 <hr>
                 {% endif %}

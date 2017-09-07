@@ -1,5 +1,4 @@
 from database_config import User, Category, Book, Base
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -18,18 +17,29 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 user_admin = User(name='Andy', email='udacity@bestbooks.com', picture='')
+
 session.add(user_admin)
 session.commit()
 
-category1 = Category(name='Science-Fiction', description='Post your favourite science-fiction books here.', user_id=1)
+category1 = Category(name='Science-Fiction',
+                     description="""Post your favourite science-fiction books
+                     here.""",
+                     user_id=1)
+
 session.add(category1)
 session.commit()
 
-category2 = Category(name='Thriller', description='What makes a good thriller?', user_id=1)
+category2 = Category(name='Thriller',
+                     description='What makes a good thriller?',
+                     user_id=1)
+
 session.add(category2)
 session.commit()
 
-category3 = Category(name='Health and Fitness', description='Get ripped now.', user_id=1)
+category3 = Category(name='Health and Fitness',
+                     description='Get ripped now.',
+                     user_id=1)
+
 session.add(category3)
 session.commit()
 
@@ -42,7 +52,8 @@ book1 = Book(
      travel and also grants psychic powers and longevity, so whoever
      controls it wields great influence.""",
     category_id=1,
-    img='',
+    img=('https://upload.wikimedia.org/wikipedia/en/d/de/'
+         'Dune-Frank_Herbert_%281965%29_First_edition.jpg'),
     user_id=1
 )
 
@@ -56,7 +67,8 @@ book2 = Book(
     interstellar war against an unknowable and unconquerable alien enemy, but
     his greatest test will be when he returns home.""",
     category=category1,
-    img='',
+    img=('https://upload.wikimedia.org/wikipedia/en/c/cd/'
+         'TheForeverWar%281stEd%29.jpg'),
     user_id=1
 )
 
@@ -72,7 +84,8 @@ book3 = Book(
     surgical implants broadcast trouble from the ferro-concrete geodesic of
     the Sprawl. Maelcum, Rastafarian in space, is her best hope of rescue.""",
     category=category1,
-    img='',
+    img=('https://upload.wikimedia.org/wikipedia/en/4/4b/Neuromancer'
+         '_%28Book%29.jpg'),
     user_id=1
 )
 
@@ -87,7 +100,8 @@ book4 = Book(
      devised the ultimate scheme to eliminate the competition and destroy the
      order of his society.""",
     category=category1,
-    img='',
+    img=('https://upload.wikimedia.org/wikipedia/en/f/fd/'
+         'The_Demolished_Man_first_edition.jpg'),
     user_id=1
 )
 
@@ -102,7 +116,8 @@ book5 = Book(
      instantaneous communication. It is the life work of Shevek, a brilliant
      physicist from the arid anarchist world of Anarres.""",
     category=category1,
-    img='',
+    img=('https://upload.wikimedia.org/wikipedia/en/f/fc/The'
+         'Dispossed%281stEdHardcover%29.jpg'),
     user_id=1
 )
 
@@ -117,7 +132,7 @@ book6 = Book(
      Their destinations are preprogrammed. They are easy to operate, but
      impossible to control.""",
     category=category1,
-    img='',
+    img=('https://upload.wikimedia.org/wikipedia/en/6/68/GatewayNovel.JPG'),
     user_id=1
 )
 
@@ -132,7 +147,8 @@ book7 = Book(
     to make farmland, the United States divided between the Japanese and the
     Nazis.""",
     category=category1,
-    img='',
+    img=('https://upload.wikimedia.org/wikipedia/en/8/87/Man_in_the_High_'
+         'Castle_%281st_Edition%29.png'),
     user_id=1
 )
 
@@ -147,7 +163,8 @@ book8 = Book(
     cruelty, poverty and racial inequality. When the \'Overlords\' finally
     reveal themselves, their horrific form makes little impression.""",
     category=category1,
-    img='',
+    img=('https://upload.wikimedia.org/wikipedia/en/7/72/Childhoods'
+         'End%281stEd%29.jpg'),
     user_id=1
 )
 
@@ -160,7 +177,7 @@ book9 = Book(
     description="""Death, the final frontier, the one inescapable and
     inevitable fact of that we call life, or is it?""",
     category=category1,
-    img='',
+    img='https://upload.wikimedia.org/wikipedia/en/a/af/Ubik%281stEd%29.jpg',
     user_id=1
 )
 
@@ -173,7 +190,8 @@ book10 = Book(
     description="""1962: A young Californian scientist finds his experiments
     spoiled by mysterious interference.""",
     category=category1,
-    img='',
+    img=('https://upload.wikimedia.org/wikipedia/en/b/ba/'
+         'Timescape%281stEd%29.jpg'),
     user_id=1
 )
 
@@ -183,9 +201,11 @@ session.commit()
 thriller_book1 = Book(
     title='The Snowman',
     author='Jo Nesbo',
-    description="""Read the latest book in the Harry Hole detective series.""",
+    description="""A young boy wakes to find his mother missing. Outside, he
+    sees her favourite scarf wrapped around the neck of a snowman.""",
     category=category2,
-    img='',
+    img=('https://upload.wikimedia.org/wikipedia/en/5/5b/The_Snowman_%28Nesb%'
+         'C3%B8_novel%29.jpg'),
     user_id=1
 )
 
@@ -195,9 +215,11 @@ session.commit()
 thriller_book2 = Book(
     title='The Girl With The Dragon Tattoo',
     author='Steig Larsson',
-    description='',
+    description="""The first book in the Millennium series featuring Lisbeth
+    Salander, the global publishing phenomenon""",
     category=category2,
-    img='',
+    img=('https://upload.wikimedia.org/wikipedia/en/b/bc/Thegirlwiththed'
+         'ragontattoo.jpg'),
     user_id=1
 )
 
@@ -207,9 +229,14 @@ session.commit()
 health_book1 = Book(
     title='Gut',
     author='Giulia Enders',
-    description='',
+    description="""Our gut is almost as important to us as our brain or our
+    heart, yet we know very little about how it works. In Gut, Giulia Enders
+    shows that rather than the utilitarian and, let's be honest, somewhat
+    embarrassing body part we imagine it to be, it is one of the most complex,
+    important, and even miraculous parts of our anatomy.""",
     category=category3,
-    img='',
+    img=('https://cdn.waterstones.com/bookjackets/large/9781/9113/'
+         '9781911344773.jpg'),
     user_id=1
 )
 
@@ -219,13 +246,18 @@ session.commit()
 health_book2 = Book(
     title='LL Cool J\'s Platinum Workout',
     author='LL Cool J',
-    description='',
+    description="""LL didn't always have a diesel body. He chiselled it the
+    old-fashioned way, with hard work and discipline. Here he shares the
+    secrets of his transformation in a uniquely creative, yet no-nonsense
+    regimen, enlivened with humour and sheer force of personality, that will
+    inspire readers to enjoy working out as never before, while building a body
+    they never thought possible.""",
     category=category3,
-    img='',
+    img=('https://upload.wikimedia.org/wikipedia/commons/1/16/LL_Cool_J.jpg'),
     user_id=1
 )
 
 session.add(health_book2)
 session.commit()
 
-print('that was fun')
+print('Books added')

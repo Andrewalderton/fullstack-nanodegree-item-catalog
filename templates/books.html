@@ -21,15 +21,20 @@
                     <div class="post-content description">
                         <p>{{book.description}}</p>
                     </div>
-                    {% if user_id == book.user_id %}
+                    <div>
+                        <a href="{{url_for('singleBook', category_id=book.category_id, book_id=book.id)}}"><img class="img" src="{{book.img}}"></a>
+                    </div>
+                    <br>
+                    {% if session['user_id'] == book.user_id %}
                     <div>
                         <br>
                         <a href="{{url_for('editBook', category_id=book.category_id, book_id=book.id)}}" class="btn-group">Edit Book</a>
                         <a href="{{url_for('deleteBook', category_id=book.category_id, book_id=book.id)}}" class="btn-group">Delete Book</a>
                     </div>
-                    <hr>
                     {% endif %}
+                    <hr>
                 {% endfor %}
+                <a href="{{url_for('showCategories')}}" class="btn btn-primary" role=="button">Back To Categories</a>
             </div>
         </div>
 {% endblock %}

@@ -1,20 +1,29 @@
 #!/usr/bin/env python
-import string, random, json, httplib2, requests
+import string
+import random
+import json
+import httplib2
+import requests
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_config import User, Category, Book, Base
-from flask import Flask, g, render_template, flash, redirect, url_for, request, jsonify, make_response
+from flask import (
+    Flask, g, render_template, flash, redirect, url_for, request, jsonify,
+    make_response
+)
 from flask import session as login_session
 from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 
 
+# App setup
 app = Flask(__name__)
 
 DEBUG = True
 PORT = 8000
 HOST = '0.0.0.0'
 
-CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
+CLIENT_ID = (json.loads(open('client_secrets.json', 'r').read())['web']
+             ['client_id'])
 APPLICATION_NAME = "Item Catalog"
 
 # Connect to Database and create database session
@@ -24,6 +33,7 @@ Base.metadata.bind = engine
 Session = sessionmaker(bind=engine)
 session = Session()
 
+
 # Check if user already exists
 def checkUser(email):
     try:
@@ -31,6 +41,7 @@ def checkUser(email):
         return user.id
     except:
         return None
+
 
 # Save new user's details to the database after logging in
 def createUser(login_session):
@@ -41,6 +52,21 @@ def createUser(login_session):
     session.commit()
     user = session.query(User).filter_by(email=login_session['email']).one()
     return user.id
+
+
+# Used when checking who created an item/category entry
+def getUserData(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+
+# Check if item already exists in the database
+def checkBookExists(title):
+    try:
+        title_search = session.query(Book).filter_by(title=title).one()
+        return title_search.title
+    except:
+        return None
 
 
 # Create anti-forgery state token
@@ -92,7 +118,8 @@ def gconnect():
 
     # Check that the access token is valid.
     access_token = credentials.access_token
-    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s' % access_token)
+    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
+           % access_token)
     h = httplib2.Http()
     result = json.loads(h.request(url, 'GET')[1])
 
@@ -121,7 +148,8 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'), 200)
+        response = make_response(json.dumps('Current user is already '
+                                            'connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -153,9 +181,10 @@ def gconnect():
     output += '<h1>Welcome, '
     output += login_session['username']
     output += '!</h1>'
-    output += '<img src="'
+    output += '<img class="profile-picture" src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += (' " style = "width: 300px; height: 300px;border-radius: 150px;'
+               '-webkit-border-radius: 150px;-moz-border-radius: 150px;"> ')
     flash("you are now logged in as %s" % login_session['username'])
     print("done!")
     return output
@@ -167,7 +196,8 @@ def gdisconnect():
     access_token = login_session.get('access_token')
 
     if access_token is None:
-        response = make_response(json.dumps('Current user not connected.'), 401)
+        response = make_response(json.dumps('Current user not connected.'),
+                                 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
@@ -175,7 +205,8 @@ def gdisconnect():
     result = h.request(url, 'GET')[0]
 
     if result['status'] != '200':
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(json.dumps('Failed to revoke token for given '
+                                            'user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -184,15 +215,17 @@ def gdisconnect():
 @app.route('/')
 @app.route('/categories/')
 def showCategories():
+    """List the categories and their descriptions on the main page"""
     categories = session.query(Category).order_by(asc(Category.name))
+
     return render_template('categories.html',
-                           categories=categories,
-                           user_id=login_session['user_id'])
+                            categories=categories)
 
 
 # Create a new category
 @app.route('/categories/new/', methods=['GET', 'POST'])
 def newCategory():
+    """Create a new category"""
     if 'username' not in login_session:
         return redirect('/login')
 
@@ -220,6 +253,7 @@ def newCategory():
 # Edit a category
 @app.route('/categories/<int:category_id>/edit/', methods=['GET', 'POST'])
 def editCategory(category_id):
+    """Edit a category's name and description"""
     if 'username' not in login_session:
         return redirect('/login')
 
@@ -247,19 +281,21 @@ def editCategory(category_id):
                                    error=error)
     else:
         return render_template('edit-category.html',
-                               name=edited_category.name, description=edited_category.description)
+                               name=edited_category.name,
+                               description=edited_category.description)
 
 
 # Delete a category
 @app.route('/categories/<int:category_id>/delete/', methods=['GET', 'POST'])
 def deleteCategory(category_id):
+    """Delete a category created by that user"""
     if 'username' not in login_session:
         return redirect('/login')
     category_to_delete = session.query(
         Category).filter_by(id=category_id).one()
     if request.method == 'POST':
         if login_session['user_id'] != category_to_delete.user_id:
-            error = 'Sorry, you do not have permission to delete this category.'
+            error = 'Sorry, you can only delete categories that you created.'
             return render_template('delete-category.html',
                                    category_id=category_id,
                                    error=error)
@@ -277,27 +313,29 @@ def deleteCategory(category_id):
 @app.route('/categories/<int:category_id>/')
 @app.route('/categories/<int:category_id>/books/')
 def showBook(category_id):
+    """Display book title, author, description and image for each book in a
+     category."""
     category = session.query(Category).filter_by(id=category_id).one()
     books = session.query(Book).filter_by(category_id=category_id).all()
     return render_template('books.html',
                            books=books,
-                           category=category,
-                           user_id=login_session['user_id'])
+                           category=category)
 
 
 # Show a single book
 @app.route('/categories/<int:category_id>/<int:book_id>/')
 @app.route('/categories/<int:category_id>/books/<int:book_id>/')
 def singleBook(category_id, book_id):
+    """Display the information relating to a single item"""
     book = session.query(Book).filter_by(id=book_id).one()
     return render_template('book-item.html',
-                           user_id=login_session['user_id'],
                            book=book)
 
 
 # Create a new book item
 @app.route('/categories/<int:category_id>/books/new/', methods=['GET', 'POST'])
 def newBook(category_id):
+    """Create a new entry in a specific category"""
     if 'username' not in login_session:
         return redirect('/login')
 
@@ -339,8 +377,10 @@ def newBook(category_id):
 
 
 # Edit a book item
-@app.route('/categories/<int:category_id>/books/<int:book_id>/edit/', methods=['GET', 'POST'])
+@app.route('/categories/<int:category_id>/books/<int:book_id>/edit/',
+           methods=['GET', 'POST'])
 def editBook(category_id, book_id):
+    """Edit an item entry created by the user."""
     if 'username' not in login_session:
         return redirect('/login')
 
@@ -396,8 +436,10 @@ def editBook(category_id, book_id):
 
 
 # Delete a book item
-@app.route('/categories/<int:category_id>/books/<int:book_id>/delete/', methods=['GET', 'POST'])
+@app.route('/categories/<int:category_id>/books/<int:book_id>/delete/',
+           methods=['GET', 'POST'])
 def deleteBook(category_id, book_id):
+    """Delete an entry previously created by the user"""
     if 'username' not in login_session:
         return redirect('/login')
 
@@ -418,12 +460,14 @@ def deleteBook(category_id, book_id):
 # JSON APIs to view category Information
 @app.route('/categories/JSON')
 def categoriesJSON():
+    """Return JSON data relating to the whole catalog"""
     categories = session.query(Category).all()
     return jsonify(Categories=[r.serialize for r in categories])
 
 
 @app.route('/categories/<int:category_id>/JSON')
 def categoryJSON(category_id):
+    """Return JSON data for a specific category"""
     items = session.query(Book).filter_by(
         category_id=category_id).all()
     return jsonify(Books=[i.serialize for i in items])
@@ -431,6 +475,7 @@ def categoryJSON(category_id):
 
 @app.route('/categories/<int:category_id>/books/<int:book_id>/JSON')
 def bookJSON(category_id, book_id):
+    """Return JSON data for a single item entry"""
     book = session.query(Book).filter_by(id=book_id).one()
     return jsonify(Book=book.serialize)
 
