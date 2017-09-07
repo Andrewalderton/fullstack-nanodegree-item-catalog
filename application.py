@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 import string
 import random
 import json
@@ -61,10 +62,17 @@ def getUserData(user_id):
 
 
 # Check if item already exists in the database
-def checkBookExists(title):
+def checkBook(title):
     try:
         title_search = session.query(Book).filter_by(title=title).one()
         return title_search.title
+    except:
+        return None
+
+def checkCategory(name):
+    try:
+        category_search = session.query(Category).filter_by(name=name).one()
+        return category_search.name
     except:
         return None
 
@@ -239,13 +247,19 @@ def newCategory():
                                    name=name,
                                    description=description)
 
-        new_category = Category(name=request.form['name'],
-                                description=request.form['description'],
-                                user_id=login_session['user_id'])
-        session.add(new_category)
-        flash('New category %s Successfully Created' % new_category.name)
-        session.commit()
-        return redirect(url_for('showCategories'))
+        if checkCategory(request.form['name']) is None:
+            new_category = Category(name=request.form['name'],
+                                    description=request.form['description'],
+                                    user_id=login_session['user_id'])
+            session.add(new_category)
+            flash('New category %s Successfully Created' % new_category.name)
+            session.commit()
+            return redirect(url_for('showCategories'))
+        else:
+            error = 'This category already exists'
+            return render_template('new-category.html',
+                                    description=request.form['description'],
+                                    error=error)
     else:
         return render_template('new-category.html')
 
@@ -362,16 +376,22 @@ def newBook(category_id):
                                    author=author,
                                    description=description)
 
-        new_book = Book(title=str(title),
-                        author=str(author),
-                        description=str(description),
-                        category_id=category_id,
-                        user_id=login_session['user_id'],
-                        img='')
-        session.add(new_book)
-        session.commit()
-        flash('New Book, %s, Successfully Created' % (new_book.title))
-        return redirect(url_for('showBook', category_id=category_id))
+        if checkBook(title) is None:
+            new_book = Book(title=str(title),
+                            author=str(author),
+                            description=str(description),
+                            category_id=category_id,
+                            user_id=login_session['user_id'],
+                            img='')
+            session.add(new_book)
+            session.commit()
+            flash('New Book, %s, Successfully Created' % (new_book.title))
+            return redirect(url_for('showBook', category_id=category_id))
+        else:
+            error = 'Sorry, this book already exists'
+            return render_template('new-book.html',
+                                   category_id=category_id,
+                                   error_title=error)
     else:
         return render_template('new-book.html', category_id=category_id)
 
@@ -406,8 +426,17 @@ def editBook(category_id, book_id):
                                    description=edited_book.description,
                                    category_id=category.id,
                                    error_title=error_title)
-        else:
+
+        elif checkBook(request.form['title']) is None:
             edited_book.title = request.form['title']
+        else:
+            error = 'Sorry, this book title already exists'
+            return render_template('edit-book.html',
+                                   title=edited_book.title,
+                                   author=edited_book.author,
+                                   description=edited_book.description,
+                                   category_id=category.id,
+                                   error_title=error)
 
         if not request.form['author']:
             error_author = 'Please enter an author'
