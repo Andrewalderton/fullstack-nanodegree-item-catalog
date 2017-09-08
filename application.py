@@ -183,19 +183,8 @@ def gconnect():
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
 
-    flash("Login Successful")
-
-    output = ''
-    output += '<h1>Welcome, '
-    output += login_session['username']
-    output += '!</h1>'
-    output += '<img class="profile-picture" src="'
-    output += login_session['picture']
-    output += (' " style = "width: 300px; height: 300px;border-radius: 150px;'
-               '-webkit-border-radius: 150px;-moz-border-radius: 150px;"> ')
-    flash("you are now logged in as %s" % login_session['username'])
-    print("done!")
-    return output
+    flash("You are now logged in as %s" % login_session['username'])
+    return redirect(url_for('showCategories'))
 
 
 # DISCONNECT - Revoke a current user's token and reset their login_session
@@ -224,10 +213,14 @@ def gdisconnect():
 @app.route('/categories/')
 def showCategories():
     """List the categories and their descriptions on the main page"""
-    categories = session.query(Category).order_by(asc(Category.name))
-
-    return render_template('categories.html',
-                           categories=categories)
+    categories = session.query(Category).order_by(asc(Category.name)).all()
+    if categories:
+        return render_template('categories.html',
+                               categories=categories)
+    else:
+        error = 'Sorry, there is nothing to display here yet.'
+        return render_template('categories.html',
+                               error=error)
 
 
 # Create a new category
@@ -519,17 +512,18 @@ def categoriesJSON():
 
 
 @app.route('/categories/<path:category_name>/JSON')
-def categoryJSON(category_id, category_name):
+def categoryJSON(category_name):
     """Return JSON data for a specific category"""
+    category = session.query(Category).filter_by(name=category_name).one()
     items = session.query(Book).filter_by(
-        category_id=category_id).all()
+        category_id=category.id).all()
     return jsonify(Books=[i.serialize for i in items])
 
 
 @app.route('/categories/<path:category_name>/<path:book_title>/JSON')
-def bookJSON(category_id, book_id):
+def bookJSON(category_name, book_title):
     """Return JSON data for a single item entry"""
-    book = session.query(Book).filter_by(id=book_id).one()
+    book = session.query(Book).filter_by(title=book_title).one()
     return jsonify(Book=book.serialize)
 
 
