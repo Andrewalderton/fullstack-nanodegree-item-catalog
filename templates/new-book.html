@@ -19,6 +19,11 @@
                 <label for="description">Description</label>
                 <textarea rows="9" cols="50" class="form-control" name="description" value="{{description}}" placeholder="Enter your text here.">{{description}}</textarea>
             </div>
+            <div class="form-group">
+                <label for="img">Image thumbnail link (not required)</label>
+                <input type="text" class="form-control" name="img" value="{{img}}" placeholder="Image URL">
+                <div class="error">{{error_img}}</div>
+            </div>
             <br>
             <button class="btn btn-primary" type="submit">Submit</button>
             <a href="/" class="btn btn-danger">Cancel</a>

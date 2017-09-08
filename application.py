@@ -227,7 +227,7 @@ def showCategories():
     categories = session.query(Category).order_by(asc(Category.name))
 
     return render_template('categories.html',
-                            categories=categories)
+                           categories=categories)
 
 
 # Create a new category
@@ -258,20 +258,20 @@ def newCategory():
         else:
             error = 'This category already exists'
             return render_template('new-category.html',
-                                    description=request.form['description'],
-                                    error=error)
+                                   description=request.form['description'],
+                                   error=error)
     else:
         return render_template('new-category.html')
 
 
 # Edit a category
-@app.route('/categories/<int:category_id>/edit/', methods=['GET', 'POST'])
-def editCategory(category_id):
+@app.route('/categories/<path:category_name>/edit/', methods=['GET', 'POST'])
+def editCategory(category_name):
     """Edit a category's name and description"""
     if 'username' not in login_session:
         return redirect('/login')
 
-    edited_category = session.query(Category).filter_by(id=category_id).one()
+    edited_category = session.query(Category).filter_by(name=category_name).one()
 
     if request.method == 'POST':
         if login_session['user_id'] != edited_category.user_id:
@@ -279,7 +279,8 @@ def editCategory(category_id):
             return render_template('edit-category.html',
                                    name=edited_category.name,
                                    description=edited_category.description,
-                                   error=error)
+                                   error=error,
+                                   category=edited_category)
         elif request.form['name']:
             edited_category.name = request.form['name']
             edited_category.description = request.form['description']
@@ -292,27 +293,29 @@ def editCategory(category_id):
             return render_template('edit-category.html',
                                    name=edited_category.name,
                                    description=edited_category.description,
-                                   error=error)
+                                   error=error,
+                                   category=edited_category)
     else:
         return render_template('edit-category.html',
                                name=edited_category.name,
-                               description=edited_category.description)
+                               description=edited_category.description,
+                               category=edited_category)
 
 
 # Delete a category
-@app.route('/categories/<int:category_id>/delete/', methods=['GET', 'POST'])
-def deleteCategory(category_id):
+@app.route('/categories/<path:category_name>/delete/', methods=['GET', 'POST'])
+def deleteCategory(category_name):
     """Delete a category created by that user"""
     if 'username' not in login_session:
         return redirect('/login')
     category_to_delete = session.query(
-        Category).filter_by(id=category_id).one()
+        Category).filter_by(name=category_name).one()
     if request.method == 'POST':
         if login_session['user_id'] != category_to_delete.user_id:
             error = 'Sorry, you can only delete categories that you created.'
             return render_template('delete-category.html',
-                                   category_id=category_id,
-                                   error=error)
+                                   error=error,
+                                   category=category_to_delete)
         else:
             session.delete(category_to_delete)
             flash('%s Successfully Deleted' % category_to_delete.name)
@@ -320,92 +323,97 @@ def deleteCategory(category_id):
             return redirect(url_for('showCategories'))
     else:
         return render_template('delete-category.html',
-                               category=category_id)
+                               category=category_to_delete)
 
 
 # Show a category's books
-@app.route('/categories/<int:category_id>/')
-@app.route('/categories/<int:category_id>/books/')
-def showBook(category_id):
+@app.route('/categories/<path:category_name>/')
+def showBook(category_name):
     """Display book title, author, description and image for each book in a
      category."""
-    category = session.query(Category).filter_by(id=category_id).one()
-    books = session.query(Book).filter_by(category_id=category_id).all()
+    category = session.query(Category).filter_by(name=category_name).one()
+    books = session.query(Book).filter_by(category_id=category.id).all()
     return render_template('books.html',
                            books=books,
                            category=category)
 
 
 # Show a single book
-@app.route('/categories/<int:category_id>/<int:book_id>/')
-@app.route('/categories/<int:category_id>/books/<int:book_id>/')
-def singleBook(category_id, book_id):
+@app.route('/categories/<path:category_name>/<path:book_title>/')
+def singleBook(category_name, book_title):
     """Display the information relating to a single item"""
-    book = session.query(Book).filter_by(id=book_id).one()
+    category = session.query(Category).filter_by(name=category_name).one()
+    book = session.query(Book).filter_by(title=book_title).one()
     return render_template('book-item.html',
-                           book=book)
+                           book=book,
+                           category=category)
 
 
 # Create a new book item
-@app.route('/categories/<int:category_id>/books/new/', methods=['GET', 'POST'])
-def newBook(category_id):
+@app.route('/categories/<path:category_name>/new/', methods=['GET', 'POST'])
+def newBook(category_name):
     """Create a new entry in a specific category"""
     if 'username' not in login_session:
         return redirect('/login')
+
+    category = session.query(Category).filter_by(name=category_name).one()
 
     if request.method == 'POST':
         title = request.form['title']
         author = request.form['author']
         description = request.form['description']
+        image = request.form['img']
 
         if not request.form['title']:
             error_title = 'Please enter a title'
             return render_template('new-book.html',
-                                   category_id=category_id,
                                    error_title=error_title,
                                    title=title,
                                    author=author,
-                                   description=description)
+                                   description=description,
+                                   img=image,
+                                   category=category)
 
         if not request.form['author']:
             error_author = 'Please enter an author'
             return render_template('new-book.html',
-                                   category_id=category_id,
                                    error_author=error_author,
                                    title=title,
                                    author=author,
-                                   description=description)
+                                   description=description,
+                                   img=image,
+                                   category=category)
 
         if checkBook(title) is None:
             new_book = Book(title=str(title),
                             author=str(author),
                             description=str(description),
-                            category_id=category_id,
                             user_id=login_session['user_id'],
-                            img='')
+                            img=str(image),
+                            category=category)
             session.add(new_book)
             session.commit()
             flash('New Book, %s, Successfully Created' % (new_book.title))
-            return redirect(url_for('showBook', category_id=category_id))
+            return redirect(url_for('showBook', category_name=category.name))
         else:
             error = 'Sorry, this book already exists'
             return render_template('new-book.html',
-                                   category_id=category_id,
-                                   error_title=error)
+                                   error_title=error,
+                                   category=category)
     else:
-        return render_template('new-book.html', category_id=category_id)
+        return render_template('new-book.html', category=category)
 
 
 # Edit a book item
-@app.route('/categories/<int:category_id>/books/<int:book_id>/edit/',
+@app.route('/categories/<path:category_name>/<path:book_title>/edit/',
            methods=['GET', 'POST'])
-def editBook(category_id, book_id):
+def editBook(category_name, book_title):
     """Edit an item entry created by the user."""
     if 'username' not in login_session:
         return redirect('/login')
 
-    edited_book = session.query(Book).filter_by(id=book_id).one()
-    category = session.query(Category).filter_by(id=category_id).one()
+    edited_book = session.query(Book).filter_by(title=book_title).one()
+    category = session.query(Category).filter_by(name=category_name).one()
 
     if login_session['user_id'] != edited_book.user_id:
         error = 'Sorry, you can\'t edit other users\' posts.'
@@ -414,8 +422,9 @@ def editBook(category_id, book_id):
                                title=edited_book.title,
                                author=edited_book.author,
                                description=edited_book.description,
-                               category_id=category_id,
-                               book_id=book_id)
+                               img=edited_book.img,
+                               book=edited_book,
+                               category=category)
 
     if request.method == 'POST':
         if not request.form['title']:
@@ -425,9 +434,12 @@ def editBook(category_id, book_id):
                                    author=edited_book.author,
                                    description=edited_book.description,
                                    category_id=category.id,
-                                   error_title=error_title)
+                                   error_title=error_title,
+                                   img=edited_book.img,
+                                   book=edited_book,
+                                   category=category)
 
-        elif checkBook(request.form['title']) is None:
+        elif checkBook(request.form['title']) is None or checkBook(request.form['title']) == edited_book.title:
             edited_book.title = request.form['title']
         else:
             error = 'Sorry, this book title already exists'
@@ -436,7 +448,10 @@ def editBook(category_id, book_id):
                                    author=edited_book.author,
                                    description=edited_book.description,
                                    category_id=category.id,
-                                   error_title=error)
+                                   error_title=error,
+                                   img=edited_book.img,
+                                   book=edited_book,
+                                   category=category)
 
         if not request.form['author']:
             error_author = 'Please enter an author'
@@ -445,44 +460,53 @@ def editBook(category_id, book_id):
                                    author=edited_book.author,
                                    description=edited_book.description,
                                    category_id=category.id,
-                                   error_author=error_author)
+                                   error_author=error_author,
+                                   img=edited_book.img,
+                                   book=edited_book,
+                                   category=category)
         else:
             edited_book.author = request.form['author']
 
         if request.form['description']:
             edited_book.description = request.form['description']
 
+        if request.form['img']:
+            edited_book.img = request.form['img']
+
         session.add(edited_book)
         session.commit()
         flash('Book Successfully Edited')
-        return redirect(url_for('showBook', category_id=category_id))
+        return redirect(url_for('showBook', category_name=category.name))
     else:
         return render_template('edit-book.html',
                                title=edited_book.title,
                                author=edited_book.author,
                                description=edited_book.description,
-                               category_id=category.id)
+                               category_id=category.id,
+                               img=edited_book.img,
+                               book=edited_book,
+                               category=category)
 
 
 # Delete a book item
-@app.route('/categories/<int:category_id>/books/<int:book_id>/delete/',
+@app.route('/categories/<path:category_name>/<path:book_title>/delete/',
            methods=['GET', 'POST'])
-def deleteBook(category_id, book_id):
+def deleteBook(category_name, book_title):
     """Delete an entry previously created by the user"""
     if 'username' not in login_session:
         return redirect('/login')
 
-    category = session.query(Category).filter_by(id=category_id).one()
-    book_to_delete = session.query(Book).filter_by(id=book_id).one()
+    category = session.query(Category).filter_by(name=category_name).one()
+    book_to_delete = session.query(Book).filter_by(title=book_title).one()
 
     if request.method == 'POST':
         session.delete(book_to_delete)
         session.commit()
         flash('Book Successfully Deleted')
-        return redirect(url_for('showBook', category_id=category_id))
+        return redirect(url_for('showBook', category_name=category_name))
     else:
         return render_template('delete-book.html',
-                               category_id=category.id,
+                               category_name=category_name,
                                book_id=book_to_delete.id)
 
 
@@ -494,15 +518,15 @@ def categoriesJSON():
     return jsonify(Categories=[r.serialize for r in categories])
 
 
-@app.route('/categories/<int:category_id>/JSON')
-def categoryJSON(category_id):
+@app.route('/categories/<path:category_name>/JSON')
+def categoryJSON(category_id, category_name):
     """Return JSON data for a specific category"""
     items = session.query(Book).filter_by(
         category_id=category_id).all()
     return jsonify(Books=[i.serialize for i in items])
 
 
-@app.route('/categories/<int:category_id>/books/<int:book_id>/JSON')
+@app.route('/categories/<path:category_name>/<path:book_title>/JSON')
 def bookJSON(category_id, book_id):
     """Return JSON data for a single item entry"""
     book = session.query(Book).filter_by(id=book_id).one()

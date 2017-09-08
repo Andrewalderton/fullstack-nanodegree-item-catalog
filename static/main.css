@@ -54,7 +54,6 @@ a:hover > h2 {
 	text-decoration: none;
 }
 
-
 /* Navbar Styling */
 .navbar {
 	height: 81px;
@@ -98,17 +97,19 @@ a:hover > h2 {
 	margin: 15px auto;
 }
 
-
 .error {
 	color: red;
 }
 
 /* Images */
 .img {
-	max-width: 100%;
+	float: right;
+	display: inline-block;
+	width: 250px;
 	border: none;
 	border-bottom: 2px solid #2bb5cf;
-    padding-top: 1em;
+	padding-top: 1em;
+	margin: 0 2em;
 }
 
 .main-img {
@@ -121,7 +122,6 @@ a:hover > h2 {
     border-bottom: 2px solid #2bb5cf;
 }
 
-
 .featured-section {
 	margin: 0.5em 0;
 	padding: 1em 0;
@@ -133,6 +133,7 @@ a:hover > h2 {
 	max-width: 100%;
 	margin: auto;
 	text-align: center;
+	font-size: 1.15em;
 }
 
 @media screen and (max-width: 991px) {
@@ -166,6 +167,10 @@ a:hover > h2 {
 
 .btn-primary:hover {
 	background-color: #599FB8;
+}
+
+.btn-outline-primary {
+	border: 2px solid #2bb5cf;
 }
 
 .btn-danger {
