@@ -1,18 +1,18 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2 class="featured-section">Delete Book</h2>
-        <br>
-        <h2>Are you sure you want to delete this book?</h2>
-        <br>
-        <form method="POST">
-            <div class="error">{{error}}</div>
-            <br>
-            <button class="btn btn-primary" type="submit">Delete</button>
-            <a href="{{url_for('showBook', category_name=category_name)}}" class="btn btn-danger">Cancel</a>
-        </form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="featured-section">DELETE BOOK</h2><br>
+            <h2>Are you sure you want to delete this book?</h2><br>
+            <form method="POST">
+                <div class="error">{{ error }}</div>
+                <br>
+                <button class="btn btn-primary" type="submit">Delete</button>
+                <a href="{{ url_for('showBook', category_name=category_name) }}" class="btn btn-danger">Cancel</a>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

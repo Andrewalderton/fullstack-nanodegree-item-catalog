@@ -1,37 +1,36 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2 class="featured-section">BOOK CATEGORIES</h2><br>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="featured-section">BOOK CATEGORIES</h2><br>
         </div>
-        {% for category in categories %}
-        <div class="row">
-            <div class="col-md-12">
-                <a href="{{url_for('showBook', category_name=category.name)}}"><h2 class="featured-heading">{{category.name}}</h2></a>
-                <p>{{category.description}}</p>
-                <br>
-                <a href="{{url_for('showBook', category_name=category.name)}}" class="btn btn-primary" role="button">READ MORE</a>
-                {% if 'username' in session and category.user_id == session['user_id'] %}
-                <div>
-                    <br>
-                    <a href="{{url_for('editCategory', category_name=category.name)}}" class="btn btn-group">Edit Category</a>
-                    <a href="{{url_for('deleteCategory', category_name=category.name)}}" class="btn btn-group">Delete Category</a>
-                    <a href="{{ url_for('newBook', category_name=category.name) }}" class="btn btn-group">Add Book</a>
-                </div>
-                <hr>
-                {% elif 'username' in session %}
-                <a href="{{ url_for('newBook', category_name=category.name) }}" class="btn btn-group" role="button">Add Book</a>
-                <hr>
-                {% endif %}
-                {% if 'username' not in session %}
-                <hr>
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-        <div class="error">{{error}}</div>
     </div>
+    {% for category in categories %}
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{ url_for('showBook', category_name=category.name) }}"><h2 class="featured-heading">{{ category.name }}</h2></a>
+            <p>{{ category.description }}</p><br>
+            <a href="{{ url_for('showBook', category_name=category.name) }}" class="btn btn-primary" role="button">READ MORE</a>
+            {% if 'username' in session and category.user_id == session['user_id'] %}
+            <div>
+                <br>
+                <a href="{{ url_for('editCategory', category_name=category.name) }}" class="btn btn-group">Edit Category</a>
+                <a href="{{ url_for('deleteCategory', category_name=category.name) }}" class="btn btn-group">Delete Category</a>
+                <a href="{{ url_for('newBook', category_name=category.name) }}" class="btn btn-group">Add Book</a>
+            </div>
+            <hr>
+            {% elif 'username' in session %}
+            <a href="{{ url_for('newBook', category_name=category.name) }}" class="btn btn-group" role="button">Add Book</a>
+            <hr>
+            {% endif %}
+            {% if 'username' not in session %}
+            <hr>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    <div class="error">{{ error }}</div>
+</div>
 {% endblock %}

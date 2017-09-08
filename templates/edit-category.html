@@ -1,23 +1,25 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2 class="featured-section">Edit Category</h2>
-        <form method="POST">
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" name="name" value="{{name}}">
-                <div class="error">{{error}}</div>
-            </div>
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea rows="9" cols="50" class="form-control" name="description" value="{{description}}">{{description}}</textarea>
-            </div>
-            <br>
-            <button class="btn btn-primary" type="submit">Update</button>
-            <a href="url_for('showBook', category_id=category.id, category_name=category.name)" class="btn btn-danger">Cancel</a>
-        </form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="featured-section">EDIT CATEGORY</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" name="name" value="{{ category.name }}">
+                    <div class="error">{{ error }}</div>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea rows="9" cols="50" class="form-control" name="description" value="{{ category.description }}">{{ category.description }}</textarea>
+                </div>
+                <br>
+                <button class="btn btn-primary" type="submit">Update</button>
+                <a href="{{ url_for('showBook', category_name=category.name) }}" class="btn btn-danger">Cancel</a>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

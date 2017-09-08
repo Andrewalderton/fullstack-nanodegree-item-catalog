@@ -1,33 +1,35 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2 class="featured-section">Add Book</h2>
-        <form method="POST">
-            <div class="form-group">
-                <label for="title">Title</label>
-                <input type="text" class="form-control" name="title" value="{{title}}" placeholder="Title">
-                <div class="error">{{error_title}}</div>
-            </div>
-            <div class="form-group">
-                <label for="author">Author</label>
-                <input type="text" class="form-control" name="author" value="{{author}}" placeholder="Author">
-                <div class="error">{{error_author}}</div>
-            </div>
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea rows="9" cols="50" class="form-control" name="description" value="{{description}}" placeholder="Enter your text here.">{{description}}</textarea>
-            </div>
-            <div class="form-group">
-                <label for="img">Image thumbnail link (not required)</label>
-                <input type="text" class="form-control" name="img" value="{{img}}" placeholder="Image URL">
-                <div class="error">{{error_img}}</div>
-            </div>
-            <br>
-            <button class="btn btn-primary" type="submit">Submit</button>
-            <a href="/" class="btn btn-danger">Cancel</a>
-        </form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="featured-section">ADD BOOK</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" name="title" value="{{ title }}" placeholder="Title">
+                    <div class="error">{{ error_title }}</div>
+                </div>
+                <div class="form-group">
+                    <label for="author">Author</label>
+                    <input type="text" class="form-control" name="author" value="{{ author }}" placeholder="Author">
+                    <div class="error">{{ error_author }}</div>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea rows="9" cols="50" class="form-control" name="description" value="{{ description }}" placeholder="Enter your text here.">{{ description }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="img">Image thumbnail link (not required)</label>
+                    <input type="text" class="form-control" name="img" value="{{ img }}" placeholder="Image URL">
+                    <div class="error">{{ error_img }}</div>
+                </div>
+                <br>
+                <button class="btn btn-primary" type="submit">Submit</button>
+                <a href="{{ url_for('showCategories') }}" class="btn btn-danger">Cancel</a>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

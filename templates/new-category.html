@@ -1,23 +1,25 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2 class="featured-section">Add Category</h2>
-        <form method="POST">
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" name="name" value="{{name}}" placeholder="">
-                <div class="error">{{error}}</div>
-            </div>
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea rows="9" cols="50" class="form-control" name="description" value="{{description}}" placeholder="Enter your text here."></textarea>
-            </div>
-            <br>
-            <button class="btn btn-primary" type="submit">Submit</button>
-            <a href="/" class="btn btn-danger">Cancel</a>
-        </form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="featured-section">ADD CATEGORY</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" name="name" value="{{ name }}" placeholder="">
+                    <div class="error">{{ error }}</div>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea rows="9" cols="50" class="form-control" name="description" value="{{ description }}" placeholder="Enter your text here."></textarea>
+                </div>
+                <br>
+                <button class="btn btn-primary" type="submit">Submit</button>
+                <a href="{{ url_for('showCategories') }}" class="btn btn-danger">Cancel</a>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

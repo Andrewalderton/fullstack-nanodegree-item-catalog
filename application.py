@@ -270,8 +270,6 @@ def editCategory(category_name):
         if login_session['user_id'] != edited_category.user_id:
             error = 'Sorry, you do not have permission to edit this category.'
             return render_template('edit-category.html',
-                                   name=edited_category.name,
-                                   description=edited_category.description,
                                    error=error,
                                    category=edited_category)
         elif request.form['name']:
@@ -279,19 +277,15 @@ def editCategory(category_name):
             edited_category.description = request.form['description']
             session.add(edited_category)
             session.commit()
-            flash('category Successfully Edited %s' % edited_category.name)
+            flash('%s Category Successfully Edited' % edited_category.name)
             return redirect(url_for('showCategories'))
         else:
             error = 'Category name is required.'
             return render_template('edit-category.html',
-                                   name=edited_category.name,
-                                   description=edited_category.description,
                                    error=error,
                                    category=edited_category)
     else:
         return render_template('edit-category.html',
-                               name=edited_category.name,
-                               description=edited_category.description,
                                category=edited_category)
 
 
@@ -389,7 +383,7 @@ def newBook(category_name):
             flash('New Book, %s, Successfully Created' % (new_book.title))
             return redirect(url_for('showBook', category_name=category.name))
         else:
-            error = 'Sorry, this book already exists'
+            error = 'Sorry, this book already exists.'
             return render_template('new-book.html',
                                    error_title=error,
                                    category=category)
@@ -412,10 +406,6 @@ def editBook(category_name, book_title):
         error = 'Sorry, you can\'t edit other users\' posts.'
         return render_template('book-item.html',
                                error=error,
-                               title=edited_book.title,
-                               author=edited_book.author,
-                               description=edited_book.description,
-                               img=edited_book.img,
                                book=edited_book,
                                category=category)
 
@@ -423,12 +413,7 @@ def editBook(category_name, book_title):
         if not request.form['title']:
             error_title = 'Please enter a title'
             return render_template('edit-book.html',
-                                   title=edited_book.title,
-                                   author=edited_book.author,
-                                   description=edited_book.description,
-                                   category_id=category.id,
                                    error_title=error_title,
-                                   img=edited_book.img,
                                    book=edited_book,
                                    category=category)
 
@@ -437,24 +422,14 @@ def editBook(category_name, book_title):
         else:
             error = 'Sorry, this book title already exists'
             return render_template('edit-book.html',
-                                   title=edited_book.title,
-                                   author=edited_book.author,
-                                   description=edited_book.description,
-                                   category_id=category.id,
                                    error_title=error,
-                                   img=edited_book.img,
                                    book=edited_book,
                                    category=category)
 
         if not request.form['author']:
             error_author = 'Please enter an author'
             return render_template('edit-book.html',
-                                   title=edited_book.title,
-                                   author=edited_book.author,
-                                   description=edited_book.description,
-                                   category_id=category.id,
                                    error_author=error_author,
-                                   img=edited_book.img,
                                    book=edited_book,
                                    category=category)
         else:
@@ -472,11 +447,6 @@ def editBook(category_name, book_title):
         return redirect(url_for('showBook', category_name=category.name))
     else:
         return render_template('edit-book.html',
-                               title=edited_book.title,
-                               author=edited_book.author,
-                               description=edited_book.description,
-                               category_id=category.id,
-                               img=edited_book.img,
                                book=edited_book,
                                category=category)
 

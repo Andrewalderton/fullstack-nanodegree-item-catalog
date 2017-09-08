@@ -1,53 +1,52 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="featured-section">{{category.name}}</h1>
-                <br>
-                {% if not books %}
-                    <p>Sorry, there are no books in this category yet.</p>
-                    {% if 'username' in session %}
-                    <div>
-                        <a href="{{ url_for('newBook', category_name=category.name) }}" class="btn-group">Add Book</a>
-                    </div>
-                    {% endif %}
-                {% endif %}
-            </div>
-        </div>
-        {% for book in books %}
-        <div class="row">
-            <div class="col-md-8">
-                <a href="{{url_for('singleBook', book_title=book.title, category_name=category.name)}}"><h2 class="featured-section">{{book.title}}</h2></a>
-                <br>
-                <h2><em>By {{ book.author }}</em></h2>
-                <p>{{book.description}}</p><br>
-                <a href="{{url_for('singleBook', book_title=book.title, category_name=category.name)}}" class="btn btn-primary" role="button">READ MORE</a><br>
-            </div>
-            {% if book.img %}
-            <div class="col-md-4">
-                <a href="{{url_for('singleBook', book_title=book.title, category_name=category.name)}}"><img class="img" src="{{book.img}}"></a>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="featured-section">{{ category.name }}</h1><br>
+            {% if not books %}
+            <p>Sorry, there are no books in this category yet.</p>
+            {% if 'username' in session %}
+            <div>
+                <a href="{{ url_for('newBook', category_name=category.name) }}" class="btn-group">Add Book</a>
             </div>
             {% endif %}
-            <br>
-        </div>
-        {% if session['user_id'] == book.user_id %}
-        <div class="row">
-            <div class="col-md-12">
-                <br>
-                <a href="{{url_for('editBook', book_title=book.title, category_name=category.name)}}" class="btn-group">Edit Book</a>
-                <a href="{{url_for('deleteBook', book_title=book.title, category_name=category.name)}}" class="btn-group">Delete Book</a>
-            </div>
-        </div>
-        {% endif %}
-        <hr>
-        {% endfor %}
-        <div class="row">
-            <div class="col-md-12">
-                <br>
-                <a href="{{url_for('showCategories')}}" class="btn btn-outline-primary" role="button">GO BACK</a>
-            </div>
+            {% endif %}
         </div>
     </div>
+    {% for book in books %}
+    <div class="row">
+        <div class="col-md-8">
+            <a href="{{ url_for('singleBook', book_title=book.title, category_name=category.name) }}"><h2 class="featured-section">{{ book.title }}</h2></a>
+            <br>
+            <h2><em>By {{ book.author }}</em></h2>
+            <p>{{ book.description }}</p><br>
+            <a href="{{ url_for('singleBook', book_title=book.title, category_name=category.name) }}" class="btn btn-primary" role="button">READ MORE</a><br>
+        </div>
+        {% if book.img %}
+        <div class="col-md-4">
+            <a href="{{ url_for('singleBook', book_title=book.title, category_name=category.name) }}"><img class="img" src="{{ book.img }}"></a>
+        </div>
+        {% endif %}
+        <br>
+    </div>
+    {% if session['user_id'] == book.user_id %}
+    <div class="row">
+        <div class="col-md-12">
+            <br>
+            <a href="{{ url_for('editBook', book_title=book.title, category_name=category.name) }}" class="btn-group">Edit Book</a>
+            <a href="{{ url_for('deleteBook', book_title=book.title, category_name=category.name) }}" class="btn-group">Delete Book</a>
+        </div>
+    </div>
+    {% endif %}
+    <hr>
+    {% endfor %}
+    <div class="row">
+        <div class="col-md-12">
+            <br>
+            <a href="{{ url_for('showCategories') }}" class="btn btn-outline-primary" role="button">GO BACK</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

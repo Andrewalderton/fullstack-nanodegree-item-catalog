@@ -1,26 +1,26 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="error">{{error}}</div>
-                <h1 class="featured-section">{{book.title}}</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="error">{{ error }}</div>
+            <h1 class="featured-section">{{ book.title }}</h1><br>
+            <h2><em>By {{ book.author }}</em></h2>
+            {% if book.img %}
+            <img class="img" src="{{ book.img }}">
+            {% endif %}
+            <p>{{ book.description }}</p><br>
+            {% if session['user_id'] == book.user_id %}
+            <div>
                 <br>
-                <h2><em>By {{ book.author }}</em></h2>
-                {% if book.img %}
-                <img class="img" src="{{book.img}}">
-                {% endif %}
-                    <p>{{book.description}}</p><br>
-                {% if session['user_id'] == book.user_id %}
-                <div>
-                    <br>
-                    <a href="{{url_for('editBook', category_id=book.category_id, book_title=book.title, category_name=category.name)}}" class="btn-group">Edit Book</a>
-                    <a href="{{url_for('deleteBook', category_id=book.category_id, book_title=book.title, category_name=category.name)}}" class="btn-group">Delete Book</a>
-                </div>
-                {% endif %}
-                <hr>
-                <a href="{{url_for('showBook', category_name=category.name)}}" class="btn btn-outline-primary" role=="button">GO BACK</a>
+                <a href="{{ url_for('editBook', book_title=book.title, category_name=category.name) }}" class="btn-group">Edit Book</a>
+                <a href="{{ url_for('deleteBook', book_title=book.title, category_name=category.name) }}" class="btn-group">Delete Book</a>
             </div>
+            {% endif %}
+            <hr>
+            <a href="{{ url_for('showBook', category_name=category.name) }}" class="btn btn-outline-primary" role="button">GO BACK</a>
         </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,33 +1,35 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2 class="featured-section">Edit Book</h2>
-        <form method="POST">
-            <div class="form-group">
-                <label for="title">Title</label>
-                <input type="text" class="form-control" name="title" value="{{title}}">
-                <div class="error">{{error_title}}</div>
-            </div>
-            <div class="form-group">
-                <label for="author">Author</label>
-                <input type="text" class="form-control" name="author" value="{{author}}">
-                <div class="error">{{error_author}}</div>
-            </div>
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea rows="9" cols="50" class="form-control" name="description" value="{{description}}">{{description}}</textarea>
-            </div>
-            <div class="form-group">
-                <label for="img">Image thumbnail link (not required)</label>
-                <input type="text" class="form-control" name="img" value="{{img}}" placeholder="Image URL">
-                <div class="error">{{error_img}}</div>
-            </div>
-            <br>
-            <button class="btn btn-primary" type="submit">Update</button>
-            <a href="{{url_for('singleBook', category_name=category.name, book_title=book.title)}}" class="btn btn-danger">Cancel</a>
-        </form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="featured-section">EDIT BOOK</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" name="title" value="{{ book.title }}">
+                    <div class="error">{{ error_title }}</div>
+                </div>
+                <div class="form-group">
+                    <label for="author">Author</label>
+                    <input type="text" class="form-control" name="author" value="{{ book.author }}">
+                    <div class="error">{{ error_author }}</div>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea rows="9" cols="50" class="form-control" name="description" value="{{ book.description }}">{{ book.description }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="img">Image thumbnail link (not required)</label>
+                    <input type="text" class="form-control" name="img" value="{{ book.img }}" placeholder="Image URL">
+                    <div class="error">{{ error_img }}</div>
+                </div>
+                <br>
+                <button class="btn btn-primary" type="submit">Update</button>
+                <a href="{{ url_for('singleBook', category_name=category.name, book_title=book.title) }}" class="btn btn-danger">Cancel</a>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}
