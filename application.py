@@ -262,7 +262,9 @@ def editCategory(category_name):
     if 'username' not in login_session:
         return redirect('/login')
 
-    edited_category = session.query(Category).filter_by(name=category_name).one()
+    edited_category = (
+        session.query(Category).filter_by(name=category_name).one()
+    )
 
     if request.method == 'POST':
         if login_session['user_id'] != edited_category.user_id:
@@ -415,7 +417,9 @@ def editBook(category_name, book_title):
                                    book=edited_book,
                                    category=category)
 
-        elif checkBook(request.form['title']) is None or checkBook(request.form['title']) == edited_book.title:
+        elif checkBook(request.form['title']) is None or (
+                checkBook(request.form['title']) == edited_book.title
+        ):
             edited_book.title = request.form['title']
         else:
             error = 'Sorry, this book title already exists'

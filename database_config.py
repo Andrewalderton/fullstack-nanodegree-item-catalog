@@ -34,7 +34,7 @@ class Category(Base):
             'id': self.id,
             'name': self.name,
             'description': self.description
-    	}
+        }
 
 
 class Book(Base):
