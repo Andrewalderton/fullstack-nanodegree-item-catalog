@@ -8,13 +8,6 @@ body {
 	position: relative;
 }
 
-a {
-	font: bold 1em/1.5em "Helvetica Neue", Helvetica, Arial, sans-serif;
-	color: #2bb5cf;
-	text-decoration: none;
-	margin-right: 2em;
-}
-
 h1,
 h2,
 h3,
@@ -45,6 +38,13 @@ h3 {
 p {
 	font-size: 1em;
 	padding-top: 1em;
+}
+
+a {
+	font: bold 1em/1.5em "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #2bb5cf;
+	text-decoration: none;
+	margin-right: 2em;
 }
 
 a:hover,
@@ -96,10 +96,6 @@ a:hover > h2 {
 	margin: 15px auto;
 }
 
-.error {
-	color: red;
-}
-
 /* Images */
 .img {
 	float: right;
@@ -108,16 +104,6 @@ a:hover > h2 {
 	border-bottom: 2px solid #2bb5cf;
 	padding-top: 1em;
 	margin: 0 2em;
-}
-
-.main-img {
-	margin: auto;
-	position: relative;
-	overflow: hidden;
-    max-height: 525px;
-    width: 1200px;
-    object-fit: cover;
-    border-bottom: 2px solid #2bb5cf;
 }
 
 .featured-section {
@@ -134,6 +120,11 @@ a:hover > h2 {
 	font-size: 1.15em;
 }
 
+.featured-text {
+	color: #777;
+	padding: 0 0 1em;
+}
+
 @media screen and (max-width: 991px) {
 	.featured-heading:nth-child(3) {
 		clear: left;
@@ -143,11 +134,7 @@ a:hover > h2 {
 	}
 }
 
-.featured-text {
-	color: #777;
-	padding: 0 0 1em;
-}
-
+/* Button styling */
 .btn-primary,
 .btn-primary:hover {
 	background-color: #2bb5cf;
@@ -165,4 +152,8 @@ a:hover > h2 {
 .btn-danger {
 	background-color: red;
 	border-color: red;
+}
+
+.error {
+	color: red;
 }

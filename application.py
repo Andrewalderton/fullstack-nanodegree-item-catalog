@@ -55,12 +55,6 @@ def createUser(login_session):
     return user.id
 
 
-# Used when checking who created an item/category entry
-def getUserData(user_id):
-    user = session.query(User).filter_by(id=user_id).one()
-    return user
-
-
 # Check if item already exists in the database
 def checkBook(title):
     try:
@@ -69,6 +63,8 @@ def checkBook(title):
     except:
         return None
 
+
+# Check if category already exists in the database
 def checkCategory(name):
     try:
         category_search = session.query(Category).filter_by(name=name).one()
@@ -86,6 +82,7 @@ def showLogin():
     return render_template('login.html', STATE=state)
 
 
+# Log out the current User
 @app.route('/logout')
 def logout():
     if login_session['provider'] == 'google':
@@ -102,6 +99,7 @@ def logout():
     return redirect(url_for('showCategories'))
 
 
+# Google Plus login
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
@@ -292,7 +290,7 @@ def editCategory(category_name):
 # Delete a category
 @app.route('/categories/<path:category_name>/delete/', methods=['GET', 'POST'])
 def deleteCategory(category_name):
-    """Delete a category created by that user"""
+    """Delete a category if created by the current user"""
     if 'username' not in login_session:
         return redirect('/login')
     category_to_delete = session.query(
@@ -395,7 +393,7 @@ def newBook(category_name):
 @app.route('/categories/<path:category_name>/<path:book_title>/edit/',
            methods=['GET', 'POST'])
 def editBook(category_name, book_title):
-    """Edit an item entry created by the user."""
+    """Edit an item entry created by the current user"""
     if 'username' not in login_session:
         return redirect('/login')
 
