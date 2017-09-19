@@ -45,7 +45,7 @@ class Book(Base):
     author = Column(String, nullable=False)
     description = Column(String)
     img = Column(String)
-    category_id = Column(String, ForeignKey('categories.id'), nullable=False)
+    category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
     category = relationship(Category)
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship(User)
