@@ -272,7 +272,13 @@ def editCategory(category_name):
             return render_template('edit-category.html',
                                    error=error,
                                    category=edited_category)
-        elif request.form['name']:
+        elif not request.form['name']:
+            error = 'Please enter a category name'
+            return render_template('edit-category.html',
+                                   error=error,
+                                   category=edited_category)
+
+        elif checkCategory(request.form['name']) is None or request.form['name'] == edited_category.name:
             edited_category.name = request.form['name']
             edited_category.description = request.form['description']
             session.add(edited_category)
@@ -280,7 +286,7 @@ def editCategory(category_name):
             flash('%s Category Successfully Edited' % edited_category.name)
             return redirect(url_for('showCategories'))
         else:
-            error = 'Category name is required.'
+            error = 'This category already exists'
             return render_template('edit-category.html',
                                    error=error,
                                    category=edited_category)
@@ -319,7 +325,7 @@ def showBook(category_name):
     """Display book title, author, description and image for each book in a
      category."""
     category = session.query(Category).filter_by(name=category_name).one()
-    books = session.query(Book).filter_by(category_id=category.id).all()
+    books = session.query(Book).filter_by(category=category.id).all()
     return render_template('books.html',
                            books=books,
                            category=category)
@@ -358,8 +364,7 @@ def newBook(category_name):
                                    title=title,
                                    author=author,
                                    description=description,
-                                   img=image,
-                                   category=category)
+                                   img=image)
 
         if not request.form['author']:
             error_author = 'Please enter an author'
@@ -368,8 +373,7 @@ def newBook(category_name):
                                    title=title,
                                    author=author,
                                    description=description,
-                                   img=image,
-                                   category=category)
+                                   img=image)
 
         if checkBook(title) is None:
             new_book = Book(title=str(title),
@@ -377,7 +381,7 @@ def newBook(category_name):
                             description=str(description),
                             user_id=login_session['user_id'],
                             img=str(image),
-                            category=category)
+                            category=category.id)
             session.add(new_book)
             session.commit()
             flash('New Book, %s, Successfully Created' % (new_book.title))
@@ -385,10 +389,9 @@ def newBook(category_name):
         else:
             error = 'Sorry, this book already exists.'
             return render_template('new-book.html',
-                                   error_title=error,
-                                   category=category)
+                                   error_title=error)
     else:
-        return render_template('new-book.html', category=category)
+        return render_template('new-book.html')
 
 
 # Edit a book item
@@ -488,7 +491,7 @@ def categoryJSON(category_name):
     """Return JSON data for a specific category"""
     category = session.query(Category).filter_by(name=category_name).one()
     items = session.query(Book).filter_by(
-        category_id=category.id).all()
+        category=category.id).all()
     return jsonify(Books=[i.serialize for i in items])
 
 

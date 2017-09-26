@@ -51,7 +51,7 @@ book1 = Book(
      Arrakis is the sole source of Melange, necessary for interstellar
      travel and also grants psychic powers and longevity, so whoever
      controls it wields great influence.""",
-    category_id=1,
+    category=1,
     img=('https://upload.wikimedia.org/wikipedia/en/d/de/'
          'Dune-Frank_Herbert_%281965%29_First_edition.jpg'),
     user_id=1
@@ -66,7 +66,7 @@ book2 = Book(
     description="""Private William Mandella is a reluctant hero in an
     interstellar war against an unknowable and unconquerable alien enemy, but
     his greatest test will be when he returns home.""",
-    category=category1,
+    category=1,
     img=('https://upload.wikimedia.org/wikipedia/en/c/cd/'
          'TheForeverWar%281stEd%29.jpg'),
     user_id=1
@@ -83,7 +83,7 @@ book3 = Book(
     by ice, Neuromancer is evolving. As entropy goes into reverse, Molly\'s
     surgical implants broadcast trouble from the ferro-concrete geodesic of
     the Sprawl. Maelcum, Rastafarian in space, is her best hope of rescue.""",
-    category=category1,
+    category=1,
     img=('https://upload.wikimedia.org/wikipedia/en/4/4b/Neuromancer'
          '_%28Book%29.jpg'),
     user_id=1
@@ -99,7 +99,7 @@ book4 = Book(
      about to change that... Ben Reich, a psychopathic business magnate, has
      devised the ultimate scheme to eliminate the competition and destroy the
      order of his society.""",
-    category=category1,
+    category=1,
     img=('https://upload.wikimedia.org/wikipedia/en/f/fd/'
          'The_Demolished_Man_first_edition.jpg'),
     user_id=1
@@ -115,7 +115,7 @@ book5 = Book(
      which will revolutionize interstellar civilisation by making possible
      instantaneous communication. It is the life work of Shevek, a brilliant
      physicist from the arid anarchist world of Anarres.""",
-    category=category1,
+    category=1,
     img=('https://upload.wikimedia.org/wikipedia/en/f/fc/The'
          'Dispossed%281stEdHardcover%29.jpg'),
     user_id=1
@@ -131,7 +131,7 @@ book6 = Book(
     working interstellar ships left behind by the mysterious, vanished Heechee.
      Their destinations are preprogrammed. They are easy to operate, but
      impossible to control.""",
-    category=category1,
+    category=1,
     img=('https://upload.wikimedia.org/wikipedia/en/6/68/GatewayNovel.JPG'),
     user_id=1
 )
@@ -146,7 +146,7 @@ book7 = Book(
     War - the African continent virtually wiped out, the Mediterranean drained
     to make farmland, the United States divided between the Japanese and the
     Nazis.""",
-    category=category1,
+    category=1,
     img=('https://upload.wikimedia.org/wikipedia/en/8/87/Man_in_the_High_'
          'Castle_%281st_Edition%29.png'),
     user_id=1
@@ -162,7 +162,7 @@ book8 = Book(
     people from outer space whose staggering powers have eradicated war,
     cruelty, poverty and racial inequality. When the \'Overlords\' finally
     reveal themselves, their horrific form makes little impression.""",
-    category=category1,
+    category=1,
     img=('https://upload.wikimedia.org/wikipedia/en/7/72/Childhoods'
          'End%281stEd%29.jpg'),
     user_id=1
@@ -176,7 +176,7 @@ book9 = Book(
     author='Philip K Dick',
     description="""Death, the final frontier, the one inescapable and
     inevitable fact of that we call life, or is it?""",
-    category=category1,
+    category=1,
     img='https://upload.wikimedia.org/wikipedia/en/a/af/Ubik%281stEd%29.jpg',
     user_id=1
 )
@@ -189,7 +189,7 @@ book10 = Book(
     author='Gregory Benford',
     description="""1962: A young Californian scientist finds his experiments
     spoiled by mysterious interference.""",
-    category=category1,
+    category=1,
     img=('https://upload.wikimedia.org/wikipedia/en/b/ba/'
          'Timescape%281stEd%29.jpg'),
     user_id=1
@@ -203,7 +203,7 @@ thriller_book1 = Book(
     author='Jo Nesbo',
     description="""A young boy wakes to find his mother missing. Outside, he
     sees her favourite scarf wrapped around the neck of a snowman.""",
-    category=category2,
+    category=2,
     img=('https://upload.wikimedia.org/wikipedia/en/5/5b/The_Snowman_%28Nesb%'
          'C3%B8_novel%29.jpg'),
     user_id=1
@@ -217,7 +217,7 @@ thriller_book2 = Book(
     author='Steig Larsson',
     description="""The first book in the Millennium series featuring Lisbeth
     Salander, the global publishing phenomenon""",
-    category=category2,
+    category=2,
     img=('https://upload.wikimedia.org/wikipedia/en/b/bc/Thegirlwiththed'
          'ragontattoo.jpg'),
     user_id=1
@@ -234,7 +234,7 @@ health_book1 = Book(
     shows that rather than the utilitarian and, let's be honest, somewhat
     embarrassing body part we imagine it to be, it is one of the most complex,
     important, and even miraculous parts of our anatomy.""",
-    category=category3,
+    category=3,
     img=('https://cdn.waterstones.com/bookjackets/large/9781/9113/'
          '9781911344773.jpg'),
     user_id=1
@@ -252,7 +252,7 @@ health_book2 = Book(
     regimen, enlivened with humour and sheer force of personality, that will
     inspire readers to enjoy working out as never before, while building a body
     they never thought possible.""",
-    category=category3,
+    category=3,
     img=('https://upload.wikimedia.org/wikipedia/commons/1/16/LL_Cool_J.jpg'),
     user_id=1
 )

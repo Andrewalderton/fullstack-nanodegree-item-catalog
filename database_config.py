@@ -18,25 +18,6 @@ class User(Base):
     picture = Column(String)
 
 
-class Category(Base):
-    __tablename__ = 'categories'
-
-    id = Column(Integer, primary_key=True, nullable=False)
-    name = Column(String, nullable=False)
-    description = Column(String)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    user = relationship(User)
-
-    @property
-    def serialize(self):
-	    # return category data in serializable format
-        return {
-            'id': self.id,
-            'name': self.name,
-            'description': self.description
-        }
-
-
 class Book(Base):
     __tablename__ = 'books'
 
@@ -45,8 +26,7 @@ class Book(Base):
     author = Column(String, nullable=False)
     description = Column(String)
     img = Column(String)
-    category_id = Column(String, ForeignKey('categories.id'), nullable=False)
-    category = relationship(Category)
+    category = Column(Integer, ForeignKey('categories.id'), nullable=False)
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship(User)
 
@@ -62,6 +42,25 @@ class Book(Base):
             'img': self.img
         }
 
+
+class Category(Base):
+    __tablename__ = 'categories'
+
+    id = Column(Integer, primary_key=True, nullable=False)
+    name = Column(String, nullable=False)
+    description = Column(String)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship(User)
+    book = relationship(Book, single_parent=True, cascade="all, delete-orphan")
+
+    @property
+    def serialize(self):
+	    # return category data in serializable format
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description
+        }
 
 engine = create_engine('sqlite:///itemcatalog.db')
 
