@@ -3,6 +3,7 @@
 import string
 import random
 import json
+from functools import wraps
 import httplib2
 import requests
 from sqlalchemy import create_engine, asc
@@ -71,6 +72,18 @@ def checkCategory(name):
         return category_search.name
     except:
         return None
+
+
+# Check user is logged in
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' in login_session:
+            return f(*args, **kwargs)
+        else:
+            flash('Sorry, you do not have permission to access this page.')
+            return redirect('/login')
+    return decorated_function
 
 
 # Create anti-forgery state token
@@ -223,11 +236,9 @@ def showCategories():
 
 # Create a new category
 @app.route('/categories/new/', methods=['GET', 'POST'])
+@login_required
 def newCategory():
     """Create a new category"""
-    if 'username' not in login_session:
-        return redirect('/login')
-
     if request.method == 'POST':
         if not request.form['name']:
             name = request.form['name']
@@ -257,11 +268,9 @@ def newCategory():
 
 # Edit a category
 @app.route('/categories/<path:category_name>/edit/', methods=['GET', 'POST'])
+@login_required
 def editCategory(category_name):
     """Edit a category's name and description"""
-    if 'username' not in login_session:
-        return redirect('/login')
-
     edited_category = (
         session.query(Category).filter_by(name=category_name).one()
     )
@@ -297,10 +306,9 @@ def editCategory(category_name):
 
 # Delete a category
 @app.route('/categories/<path:category_name>/delete/', methods=['GET', 'POST'])
+@login_required
 def deleteCategory(category_name):
     """Delete a category if created by the current user"""
-    if 'username' not in login_session:
-        return redirect('/login')
     category_to_delete = session.query(
         Category).filter_by(name=category_name).one()
     if request.method == 'POST':
@@ -344,11 +352,9 @@ def singleBook(category_name, book_title):
 
 # Create a new book item
 @app.route('/categories/<path:category_name>/new/', methods=['GET', 'POST'])
+@login_required
 def newBook(category_name):
     """Create a new entry in a specific category"""
-    if 'username' not in login_session:
-        return redirect('/login')
-
     category = session.query(Category).filter_by(name=category_name).one()
 
     if request.method == 'POST':
@@ -397,11 +403,9 @@ def newBook(category_name):
 # Edit a book item
 @app.route('/categories/<path:category_name>/<path:book_title>/edit/',
            methods=['GET', 'POST'])
+@login_required
 def editBook(category_name, book_title):
     """Edit an item entry created by the current user"""
-    if 'username' not in login_session:
-        return redirect('/login')
-
     edited_book = session.query(Book).filter_by(title=book_title).one()
     category = session.query(Category).filter_by(name=category_name).one()
 
@@ -459,11 +463,9 @@ def editBook(category_name, book_title):
 # Delete a book item
 @app.route('/categories/<path:category_name>/<path:book_title>/delete/',
            methods=['GET', 'POST'])
+@login_required
 def deleteBook(category_name, book_title):
     """Delete an entry previously created by the user"""
-    if 'username' not in login_session:
-        return redirect('/login')
-
     category = session.query(Category).filter_by(name=category_name).one()
     book_to_delete = session.query(Book).filter_by(title=book_title).one()
 
