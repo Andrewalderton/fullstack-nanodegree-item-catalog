@@ -41,7 +41,7 @@ def checkUser(email):
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
-    except:
+    except Exception:
         return None
 
 
@@ -61,7 +61,7 @@ def checkBook(title):
     try:
         title_search = session.query(Book).filter_by(title=title).one()
         return title_search.title
-    except:
+    except Exception:
         return None
 
 
@@ -70,7 +70,7 @@ def checkCategory(name):
     try:
         category_search = session.query(Category).filter_by(name=name).one()
         return category_search.name
-    except:
+    except Exception:
         return None
 
 
@@ -287,7 +287,8 @@ def editCategory(category_name):
                                    error=error,
                                    category=edited_category)
 
-        elif checkCategory(request.form['name']) is None or request.form['name'] == edited_category.name:
+        elif checkCategory(request.form['name']) is None or (
+                request.form['name'] == edited_category.name):
             edited_category.name = request.form['name']
             edited_category.description = request.form['description']
             session.add(edited_category)
