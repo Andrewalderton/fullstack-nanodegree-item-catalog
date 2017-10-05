@@ -1,1 +1,1 @@
-web: python books_database.py application.py
+web: gunicorn app:application.py
