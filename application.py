@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python2
 
 import string
 import random
@@ -29,7 +29,7 @@ CLIENT_ID = (json.loads(open('client_secrets.json', 'r').read())['web']
 APPLICATION_NAME = "Item Catalog"
 
 # Connect to Database and create database session
-engine = create_engine('sqlite:///itemcatalog.db')
+engine = create_engine('postgres://cppuchkbswutrx:2ca2a869db9b201d744f563bb5ddf63eb5159ad9c1ef9cc11e3d2aa070fa6663@ec2-23-21-88-45.compute-1.amazonaws.com:5432/dekf8akjo5gdgk')
 Base.metadata.bind = engine
 
 Session = sessionmaker(bind=engine)
@@ -505,6 +505,6 @@ def bookJSON(category_name, book_title):
     return jsonify(Book=book.serialize)
 
 
-if __name__ == '__main__':
-    app.secret_key = 'secret_muffin'
-    app.run(debug=DEBUG, host=HOST, port=PORT)
+# if __name__ == '__main__':
+app.secret_key = 'secret_muffin'
+    # app.run(debug=DEBUG, host=HOST, port=PORT)

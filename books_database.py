@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 # an Engine, which the Session will use for connection
 # resources
-engine = create_engine('sqlite:///itemcatalog.db')
+engine = create_engine('postgres://cppuchkbswutrx:2ca2a869db9b201d744f563bb5ddf63eb5159ad9c1ef9cc11e3d2aa070fa6663@ec2-23-21-88-45.compute-1.amazonaws.com:5432/dekf8akjo5gdgk')
 
 # Clear the database
 Base.metadata.drop_all(engine)
