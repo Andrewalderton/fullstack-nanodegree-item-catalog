@@ -23,6 +23,8 @@ Launch the Vagrant virtual machine by running `vagrant up` in the command line. 
 
 Install the dependency libraries (Flask, sqlalchemy, requests and oauth2client) by running `pip install -r requirements.txt`.
 
+Open `application.py` and uncomment the two lines at the bottom of the file. Fix the indentention on line 509 and save.
+
 Add sample database categories and items using `python books_database.py`.
 
 To run the app, enter `python application.py`, then navigate to `localhost:8000` in the browser.
