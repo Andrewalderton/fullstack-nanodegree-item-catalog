@@ -5,6 +5,8 @@ Udacity Item Catalog
 
 An item catalog web app created using Flask for the Udacity Full Stack Nanodegree. The application provides a list of items within a variety of categories and integrates third party user registration and authentication. Authenticated users have the ability to post, edit, and delete their own items and categories.
 
+**Update:** A live version of the app is now available at [item-catalog-andrewalderton.herokuapp.com](https://item-catalog-andrewalderton.herokuapp.com/). Alternatively, follow the instructions below to set up the project on your machine.
+
 ## Setup
 
 You will need Vagrant and Virtualbox installed in order to run the app.
