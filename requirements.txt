@@ -23,7 +23,7 @@ pyparsing==2.2.0
 pycodestyle==2.3.1
 redis==2.10.5
 requests==2.18.4
-rsa==3.4.2
+rsa==4.7.1
 six==1.11.0
 SQLAlchemy==1.1.13
 SQLAlchemy-Utils==0.32.17
